@@ -1,14 +1,14 @@
 module "asg" {
-  source = "terraform-aws-modules/autoscaling/aws"
-
+  source  = "terraform-aws-modules/autoscaling/aws"
+  version = "8.2.0"
   # Autoscaling group
-  name = "tf-asg"
+  name = var.asg_name
 
-  min_size                  = 2
-  max_size                  = 4
-  desired_capacity          = 2
+  min_size                  = var.asg_min_size
+  max_size                  = var.asg_max_size
+  desired_capacity          = var.asg_desired_size
   wait_for_capacity_timeout = 0
-  health_check_type         = "EC2"
+  health_check_type         = var.instance_type
   vpc_zone_identifier       = module.vpc.private_subnets
 
   # Launch template
@@ -16,7 +16,7 @@ module "asg" {
   launch_template_description = "TF Launch template"
   update_default_version      = true
 
-  image_id          = "ami-0509eb4a380d8a316"
+  image_id          = var.image_id
   instance_type     = "c5.large"
   ebs_optimized     = true
   enable_monitoring = true
@@ -28,8 +28,8 @@ module "asg" {
       ebs = {
         delete_on_termination = true
         encrypted             = true
-        volume_size           = 30
-        volume_type           = "gp3"
+        volume_size           = var.instance_storage
+        volume_type           = var.storage_type
       }
     }
   ]
@@ -46,10 +46,8 @@ module "asg" {
 
   # ECS Cluster association
   user_data = base64encode(templatefile("${path.module}/templates/ec2_asg_sh.tpl", {
-    ecs_cluster_name = module.ecs_cluster.name   # ecs.cluster_name
+    ecs_cluster_name = module.ecs_cluster.name # ecs.cluster_name
   }))
-
-  # tags = local.common_tags
 
   iam_instance_profile_name = "ecsInstanceRole"
 
