@@ -36,6 +36,28 @@ variable "private_subnet_cidrs" {
   default     = ["10.0.3.0/24", "10.0.4.0/24"]
 }
 
+variable "enable_vpn_gateway" {
+  type = bool
+  default = false
+}
+
+variable "enable_nat_gateway" {
+  type = bool
+  default = true
+}
+
+variable "single_nat_gateway" {
+  description = "enable nat for each private subnet"
+  type = bool
+  default = false
+}
+
+variable "one_nat_gateway_per_az" {
+  description = "enable nat for each private subnet"
+  type = bool
+  default = true
+}
+
 ### Security Groups 
 
 variable "alb_sg_name" {
@@ -132,12 +154,30 @@ variable "alb_name" {
   default     = "TF-ALB"
 }
 
+variable "load_balancer_type" {
+  description = "application load balancer"
+  type = string
+  default = "application"
+}
+
+variable "alb_cidr" {
+  description = "load balancer ipv4 cidr block"
+  type = string
+  default = "0.0.0.0/0"
+}
+
+variable "alb_ip_egress" {
+  description = "allow all protocols in alb egress"
+  type = string
+
+}
+
 ### Auto Scaling Group
 
 variable "asg_name" {
   description = "auto scaling group name"
   type        = string
-  default     = "TF-ALB"
+  default     = "TF-ASG"
 }
 
 variable "alb_tg_name" {

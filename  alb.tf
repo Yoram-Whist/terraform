@@ -2,8 +2,8 @@ module "alb" {
   source  = "terraform-aws-modules/alb/aws"
   version = "~> 9.0"
 
-  name               = "TF-ALB"
-  load_balancer_type = "application"
+  name               = var.alb_name
+  load_balancer_type = var.load_balancer_type
 
   vpc_id          = module.vpc.vpc_id
   subnets         = module.vpc.public_subnets
@@ -17,7 +17,7 @@ module "alb" {
       from_port   = var.http_port
       to_port     = var.http_port
       ip_protocol = var.tcp_proctocol
-      cidr_ipv4   = "0.0.0.0/0"
+      cidr_ipv4   = var.alb_cidr
     }
   }
   security_group_egress_rules = {
