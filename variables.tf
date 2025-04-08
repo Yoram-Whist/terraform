@@ -37,11 +37,13 @@ variable "private_subnet_cidrs" {
 }
 
 variable "enable_vpn_gateway" {
+  description = "vpn gateway - not needed"
   type = bool
   default = false
 }
 
 variable "enable_nat_gateway" {
+  description = "need for the private instances"
   type = bool
   default = true
 }
