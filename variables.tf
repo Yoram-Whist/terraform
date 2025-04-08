@@ -53,7 +53,7 @@ variable "single_nat_gateway" {
 }
 
 variable "one_nat_gateway_per_az" {
-  description = "enable nat for each private subnet"
+  description = "enable nat for each private availability"
   type = bool
   default = true
 }
