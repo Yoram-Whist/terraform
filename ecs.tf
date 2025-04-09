@@ -19,12 +19,12 @@ module "ecs_cluster" {
     one = {
       auto_scaling_group_arn = module.asg.autoscaling_group_arn
 
-      # managed_scaling = {
-      #   maximum_scaling_step_size = 1
-      #   minimum_scaling_step_size = 1
-      #   status                    = "ENABLED"
-      #   target_capacity           = 60
-      # }
+      managed_scaling = {
+        maximum_scaling_step_size = var.max_scale_step_size
+        minimum_scaling_step_size = var.min_scale_step_size
+        status                    = var.managed_scaling_status
+        target_capacity           = var.target_capacity
+      }
     }
   }
 
@@ -36,23 +36,23 @@ module "ecs_service" {
   version = "5.12.0"
 
   depends_on  = [module.db]
-  name        = var.ecs_task_name
+  name        = var.ecs_service_name
   cluster_arn = module.ecs_cluster.arn
-  launch_type = var.instance_type
+  launch_type = var.launch_type
 
   cpu    = var.task_cpu_allocation
   memory = var.task_memory_allocation
 
-  requires_compatibilities = [var.instance_type]
+  requires_compatibilities = [var.launch_type]
   container_definitions = {
-    "${var.task_container_name}" = {
+    "${var.task_name}" = {
       cpu       = var.task_cpu_allocation
       memory    = var.task_memory_allocation
       essential = true
       image     = var.task_image
       port_mappings = [
         {
-          name          = var.task_container_name
+          name          = var.task_name
           containerPort = var.http_port
           protocol      = var.tcp_proctocol
           appProtocol   = var.http_protocol
@@ -65,12 +65,12 @@ module "ecs_service" {
   load_balancer = {
     service = {
       target_group_arn = module.alb.target_groups[var.alb_tg_name].arn
-      container_name   = var.task_container_name
-      container_port   = 80
+      container_name   = var.task_name
+      container_port   = var.http_port
     }
   }
 
-  desired_count      = 6
+  desired_count      = var.desired_count
   subnet_ids         = module.vpc.private_subnets
   security_group_ids = [aws_security_group.ecs_sg.id]
 

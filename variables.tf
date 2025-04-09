@@ -38,26 +38,26 @@ variable "private_subnet_cidrs" {
 
 variable "enable_vpn_gateway" {
   description = "vpn gateway - not needed"
-  type = bool
-  default = false
+  type        = bool
+  default     = false
 }
 
 variable "enable_nat_gateway" {
   description = "need for the private instances"
-  type = bool
-  default = true
+  type        = bool
+  default     = true
 }
 
 variable "single_nat_gateway" {
   description = "enable nat for each private subnet"
-  type = bool
-  default = false
+  type        = bool
+  default     = false
 }
 
 variable "one_nat_gateway_per_az" {
   description = "enable nat for each private availability"
-  type = bool
-  default = true
+  type        = bool
+  default     = true
 }
 
 ### Security Groups 
@@ -158,20 +158,14 @@ variable "alb_name" {
 
 variable "load_balancer_type" {
   description = "application load balancer"
-  type = string
-  default = "application"
+  type        = string
+  default     = "application"
 }
 
 variable "alb_cidr" {
   description = "load balancer ipv4 cidr block"
-  type = string
-  default = "0.0.0.0/0"
-}
-
-variable "alb_ip_egress" {
-  description = "allow all protocols in alb egress"
-  type = string
-
+  type        = string
+  default     = "0.0.0.0/0"
 }
 
 ### Auto Scaling Group
@@ -206,6 +200,12 @@ variable "asg_desired_size" {
   default     = 2
 }
 
+variable "launch_template_name" {
+  description = "name of the asg launch template"
+  type        = string
+  default     = "ecs-app-asg"
+}
+
 variable "image_id" {
   description = "The id of the machine image (AMI) to use for the server."
   type        = string
@@ -214,6 +214,12 @@ variable "image_id" {
     condition     = length(var.image_id) > 4 && substr(var.image_id, 0, 4) == "ami-"
     error_message = "The image_id value must be a valid AMI id, starting with \"ami-\"."
   }
+}
+
+variable "instance_type" {
+  description = "value"
+  type        = string
+  default     = "c5.large"
 }
 
 variable "instance_storage" {
@@ -231,24 +237,42 @@ variable "cluster_name" {
 }
 
 variable "ecs_service_name" {
-  description = "name of the ECS cluster"
+  description = "name of the ECS service"
   type        = string
-  default     = "ecs-sample"
+  default     = "app-svc"
 }
 
-variable "ecs_task_name" {
-  description = "name of the ECS cluster"
-  type        = string
-  default     = "app-task"
+variable "max_scale_step_size" {
+  description = "max scaling step size"
+  type        = number
+  default     = 1
 }
 
-variable "task_container_name" {
-  description = "name of the ECS cluster"
-  type        = string
-  default     = "python-container"
+variable "min_scale_step_size" {
+  description = "min scaling step size"
+  type        = number
+  default     = 1
 }
 
-variable "instance_type" {
+variable "managed_scaling_status" {
+  description = "on or off managed scaling"
+  type        = string
+  default     = "ENABLED"
+}
+
+variable "target_capacity" {
+  description = "target capacity desired"
+  type        = number
+  default     = 60
+}
+
+variable "task_name" {
+  description = "name of the ECS task"
+  type        = string
+  default     = "python-task"
+}
+
+variable "launch_type" {
   description = "EC2 machine for the type"
   type        = string
   default     = "EC2"
@@ -270,4 +294,10 @@ variable "task_image" {
   description = "python app as the base image for the tasks"
   type        = string
   default     = "930354804502.dkr.ecr.us-west-1.amazonaws.com/yoram/python-app:latest"
+}
+
+variable "desired_count" {
+  description = "amount of desired tasks the service runs"
+  type        = number
+  default     = 6
 }

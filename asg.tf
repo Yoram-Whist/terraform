@@ -8,16 +8,16 @@ module "asg" {
   max_size                  = var.asg_max_size
   desired_capacity          = var.asg_desired_size
   wait_for_capacity_timeout = 0
-  health_check_type         = var.instance_type
+  health_check_type         = var.launch_type
   vpc_zone_identifier       = module.vpc.private_subnets
 
   # Launch template
-  launch_template_name        = "ecs-app-asg"
+  launch_template_name        = var.launch_template_name
   launch_template_description = "TF Launch template"
   update_default_version      = true
 
   image_id          = var.image_id
-  instance_type     = "c5.large"
+  instance_type     = var.instance_type
   ebs_optimized     = true
   enable_monitoring = true
 
