@@ -58,3 +58,58 @@ module "asg" {
   }
 
 }
+
+
+# CloudWatch alarm for scale up based on CPU utilization above 60%
+resource "aws_cloudwatch_metric_alarm" "scale_up" {
+  alarm_description   = "Monitors CPU utilization for scale-up"
+  alarm_actions       = [aws_autoscaling_policy.scale_up.arn]
+  alarm_name          = "ecs_scale_up"
+  comparison_operator = "GreaterThanThreshold"
+  namespace           = "AWS/EC2"
+  metric_name         = "CPUUtilization"
+  threshold           = 60
+  evaluation_periods  = 1
+  period              = 300 # 5 minutes period
+  statistic           = "Average"
+
+  dimensions = {
+    AutoScalingGroupName = module.asg.autoscaling_group_name
+  }
+}
+
+# CloudWatch alarm for scale down based on CPU utilization below 40%
+resource "aws_cloudwatch_metric_alarm" "scale_down" {
+  alarm_description   = "Monitors CPU utilization for scale-down"
+  alarm_actions       = [aws_autoscaling_policy.scale_down.arn]
+  alarm_name          = "ecs_scale_down"
+  comparison_operator = "LessThanOrEqualToThreshold"
+  namespace           = "AWS/EC2"
+  metric_name         = "CPUUtilization"
+  threshold           = 40
+  evaluation_periods  = 1
+  period              = 300 # 5 minutes period
+  statistic           = "Average"
+
+  dimensions = {
+    AutoScalingGroupName = module.asg.autoscaling_group_name
+  }
+}
+
+# Autoscaling policy to add one instance if CPU utilization is high
+resource "aws_autoscaling_policy" "scale_up" {
+  name                   = "ecs_scale_up"
+  autoscaling_group_name = module.asg.autoscaling_group_name
+  adjustment_type        = "ChangeInCapacity"
+  scaling_adjustment     = 1
+  cooldown               = 120
+}
+
+# Autoscaling policy to remove one instance if CPU utilization is low
+resource "aws_autoscaling_policy" "scale_down" {
+  name                   = "ecs_scale_down"
+  autoscaling_group_name = module.asg.autoscaling_group_name
+  adjustment_type        = "ChangeInCapacity"
+  scaling_adjustment     = -1
+  cooldown               = 120
+}

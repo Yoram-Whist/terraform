@@ -3,7 +3,7 @@ module "ecs_cluster" {
   version = "5.12.0"
 
   cluster_name = var.cluster_name
-  # Capacity provider - autoscaling groups
+  # Capacity provider - using ec2's
   default_capacity_provider_use_fargate = false
 
   cluster_configuration = {
@@ -24,7 +24,7 @@ module "ecs_cluster" {
         minimum_scaling_step_size = var.min_scale_step_size
         status                    = var.managed_scaling_status
         target_capacity           = var.target_capacity
-        warm_up_time              = 300
+        instance_warmup_period    = var.scale_in_out_timeout
       }
     }
   }
@@ -72,18 +72,18 @@ module "ecs_service" {
   }
 
   desired_count            = var.desired_count
-  autoscaling_max_capacity = 10
-  autoscaling_min_capacity = 6
+  autoscaling_max_capacity = var.autoscaling_max_capacity
+  autoscaling_min_capacity = var.autoscaling_min_capacity
   autoscaling_policies = {
     "cpu" = {
       "policy_type" = "TargetTrackingScaling"
       "target_tracking_scaling_policy_configuration" = {
-        "target_value" = 60 # Set target CPU utilization to 60%
+        "target_value" = var.autoscaling_service_cpu_target
         "predefined_metric_specification" = {
           "predefined_metric_type" = "ECSServiceAverageCPUUtilization"
         }
-        "scale_in_cooldown"  = 300 # Optional: Set cooldown period for scaling in (5 minutes)
-        "scale_out_cooldown" = 300 # Optional: Set cooldown period for scaling out (5 minutes)
+        "scale_in_cooldown"  = var.scale_in_out_timeout
+        "scale_out_cooldown" = var.scale_in_out_timeout
       }
     }
   }

@@ -263,7 +263,7 @@ variable "managed_scaling_status" {
 variable "target_capacity" {
   description = "target capacity desired"
   type        = number
-  default     = 60
+  default     = 100
 }
 
 variable "task_name" {
@@ -300,4 +300,28 @@ variable "desired_count" {
   description = "amount of desired tasks the service runs"
   type        = number
   default     = 6
+}
+
+variable "autoscaling_max_capacity" {
+  description = "max amount of running tasks in the service"
+  type        = number
+  default     = 10
+}
+
+variable "autoscaling_min_capacity" {
+  description = "min amount of running tasks in the service"
+  type        = number
+  default     = 6
+}
+
+variable "autoscaling_service_cpu_target" {
+  description = "the cou target value to add more services"
+  type        = number
+  default     = 60
+}
+
+variable "scale_in_out_timeout" {
+  description = "how long to wait before to scale in or down services"
+  type        = number
+  default     = 300
 }
