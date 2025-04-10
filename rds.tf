@@ -13,13 +13,13 @@ module "db" {
 
   db_name                     = var.rds_db_name
   port                        = var.mysql_port
-  manage_master_user_password = false
+  manage_master_user_password = var.manage_master_user_password
   username                    = local.db_creds.username
   password                    = local.db_creds.password
 
-  multi_az               = true
+  multi_az               = var.rds_multi_az
   vpc_security_group_ids = [aws_security_group.rds_sg.id]
-  create_db_subnet_group = true
+  create_db_subnet_group = var.create_db_subnet_group
   subnet_ids             = module.vpc.private_subnets
 
   # DB parameter group

@@ -4,7 +4,7 @@ module "ecs_cluster" {
 
   cluster_name = var.cluster_name
   # Capacity provider - using ec2's
-  default_capacity_provider_use_fargate = false
+  default_capacity_provider_use_fargate = var.default_capacity_provider_use_fargate
 
   cluster_configuration = {
     execute_command_configuration = {
@@ -90,14 +90,13 @@ module "ecs_service" {
 
   subnet_ids          = module.vpc.private_subnets
   security_group_name = var.ecs_sg_name
-  tags                = local.common_tags
+  security_group_tags = local.common_tags
   security_group_rules = {
     alb_ingress_3000 = {
       type                     = "ingress"
       from_port                = var.http_port
       to_port                  = var.http_port
       protocol                 = var.tcp_protocol
-      description              = "Service SG"
       source_security_group_id = module.alb.security_group_id
     }
     egress_all = {
@@ -108,4 +107,6 @@ module "ecs_service" {
       cidr_blocks = var.all_cidr_block
     }
   }
+
+  tags = local.common_tags
 }

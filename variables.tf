@@ -124,6 +124,21 @@ variable "rds_creds_secrets" {
   type        = string
 }
 
+variable "manage_master_user_password" {
+  description = "should the module manage the password"
+  type        = string
+}
+
+variable "rds_multi_az" {
+  description = "deploy in multiple availability zones"
+  type        = bool
+}
+
+variable "create_db_subnet_group" {
+  description = "creates a subnet group for the rds"
+  type        = bool
+}
+
 variable "rds_instance" {
   description = "instance of the database"
   type        = string
@@ -272,6 +287,11 @@ variable "cooldown" {
 variable "cluster_name" {
   description = "name of the ECS cluster"
   type        = string
+}
+
+variable "default_capacity_provider_use_fargate" {
+  description = "enable if using fargates"
+  type        = bool
 }
 
 variable "ecs_service_name" {

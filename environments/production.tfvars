@@ -24,16 +24,19 @@ http_protocol  = "http"
 all_cidr_block = ["0.0.0.0/0"]
 
 ### RDS
-rds_engine             = "mysql"
-rds_db_name            = "app_db"
-rds_engine_version     = "8.0"
-rds_engine_sub_version = ".40"
-rds_instance           = "db.t3.micro"
-rds_storage_size       = 20
-storage_type           = "gp3"
-deletion_protection    = false
-skip_final_snapshot    = true
-rds_creds_secrets      = "rds-cred-tf"
+rds_engine                  = "mysql"
+rds_db_name                 = "app_db"
+rds_engine_version          = "8.0"
+rds_engine_sub_version      = ".40"
+rds_instance                = "db.t3.micro"
+rds_storage_size            = 20
+storage_type                = "gp3"
+deletion_protection         = false
+skip_final_snapshot         = true
+rds_creds_secrets           = "rds-cred-tf"
+manage_master_user_password = false
+rds_multi_az                = true
+create_db_subnet_group      = true
 
 ### Application Load Balancer
 alb_name           = "TF-ALB"
@@ -62,19 +65,20 @@ decrease_instances_amount   = -1
 cooldown                    = 120
 
 ### ECS
-cluster_name                   = "tf-ecs-ec2"
-ecs_service_name               = "app-svc"
-max_scale_step_size            = 1
-min_scale_step_size            = 1
-managed_scaling_status         = "ENABLED"
-target_capacity                = 100
-task_name                      = "python-task"
-launch_type                    = "EC2"
-task_cpu_allocation            = 256
-task_memory_allocation         = 512
-task_image                     = "930354804502.dkr.ecr.us-west-1.amazonaws.com/yoram/python-app:latest"
-desired_count                  = 6
-autoscaling_max_capacity       = 10
-autoscaling_min_capacity       = 6
-autoscaling_service_cpu_target = 60
-scale_in_out_timeout           = 300
+cluster_name                          = "tf-ecs-ec2"
+default_capacity_provider_use_fargate = false
+ecs_service_name                      = "app-svc"
+max_scale_step_size                   = 1
+min_scale_step_size                   = 1
+managed_scaling_status                = "ENABLED"
+target_capacity                       = 100
+task_name                             = "python-task"
+launch_type                           = "EC2"
+task_cpu_allocation                   = 256
+task_memory_allocation                = 512
+task_image                            = "930354804502.dkr.ecr.us-west-1.amazonaws.com/yoram/python-app:latest"
+desired_count                         = 6
+autoscaling_max_capacity              = 10
+autoscaling_min_capacity              = 6
+autoscaling_service_cpu_target        = 60
+scale_in_out_timeout                  = 300
