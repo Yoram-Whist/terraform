@@ -64,9 +64,7 @@ module "asg" {
     value               = true
     propagate_at_launch = true
   })
-
 }
-
 
 # CloudWatch alarm for scale up based on CPU utilization above 60%
 resource "aws_cloudwatch_metric_alarm" "scale_up" {
