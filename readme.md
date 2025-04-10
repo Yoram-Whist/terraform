@@ -9,7 +9,11 @@ TLDR - highly available, secure ECS with ASG, ALB & RDS
 
 # How to run 
 ```sh
-terraform apply -var-file="./enviorments/production.tfvars"
+terraform workspace new production
+terraform workspace select production
+terraform apply -var-file="./environments/production.tfvars"
 ```
 
 You can create your own tfvars file with your values for other workspaces.
+
+- note: tfvars files added for evaluation, otherwise it is in the gitignore file
