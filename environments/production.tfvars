@@ -37,11 +37,16 @@ rds_creds_secrets           = "rds-cred-tf"
 manage_master_user_password = false
 rds_multi_az                = true
 create_db_subnet_group      = true
+rds_backup_retention_period = 1
+rds_backup_window           = "03:00-03:30"
 
 ### Application Load Balancer
 alb_name           = "TF-ALB"
 load_balancer_type = "application"
 alb_cidr           = "0.0.0.0/0"
+
+### S3
+alb_bucket_name = "my-s3-bucket-for-alb-logs-yoram"
 
 ### Auto Scaling Group
 asg_name                    = "TF-ASG"

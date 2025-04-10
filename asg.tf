@@ -52,6 +52,13 @@ module "asg" {
     }
   ]
 
+  # Launch Template Metadata Options to disable IMDSv1
+  metadata_options = {
+    http_tokens                 = "required" # This requires IMDSv2 (disables IMDSv1)
+    http_endpoint               = "enabled"  # Ensure the IMDS endpoint is enabled for IMDSv2
+    http_put_response_hop_limit = 1          #Ensure Launch template should not have a metadata response hop limit greater than 1
+  }
+
   # ECS Cluster association
   user_data = base64encode(templatefile("${path.module}/templates/ec2_asg_sh.tpl", {
     ecs_cluster_name = module.ecs_cluster.name # ecs.cluster_name

@@ -2,6 +2,7 @@ module "alb" {
   source  = "terraform-aws-modules/alb/aws"
   version = "~> 9.0"
 
+  depends_on         = [module.s3_bucket_for_logs]
   name               = var.alb_name
   load_balancer_type = var.load_balancer_type
 
@@ -27,6 +28,15 @@ module "alb" {
       cidr_ipv4   = module.vpc.vpc_cidr_block
     }
   }
+
+  # Enabling alb logs 
+  access_logs = {
+    bucket = var.alb_bucket_name
+  }
+  connection_logs = {
+    bucket = var.alb_bucket_name
+  }
+
 
   listeners = {
     ex_http = {

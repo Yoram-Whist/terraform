@@ -164,6 +164,16 @@ variable "skip_final_snapshot" {
   type        = bool
 }
 
+variable "rds_backup_retention_period" {
+  description = "Set to a value greater than 0 (e.g., 7 days)"
+  type        = number
+}
+
+variable "rds_backup_window" {
+  description = "when to do the backup"
+  type        = string
+}
+
 ### ALB
 
 variable "alb_name" {
@@ -367,4 +377,11 @@ variable "autoscaling_service_cpu_target" {
 variable "scale_in_out_timeout" {
   description = "how long to wait before to scale in or down services"
   type        = number
+}
+
+### S3
+
+variable "alb_bucket_name" {
+  description = "the bucket name with the alb will save the logs"
+  type        = string
 }

@@ -32,5 +32,12 @@ module "db" {
   deletion_protection = var.deletion_protection
   skip_final_snapshot = var.skip_final_snapshot
 
+  # Enable CloudWatch Logs Export for RDS (MySQL)
+  enabled_cloudwatch_logs_exports = ["error", "general", "slowquery"]
+
+  # Backup Configuration
+  backup_retention_period = var.rds_backup_retention_period
+  backup_window           = var.rds_backup_window
+
   tags = local.common_tags
 }
