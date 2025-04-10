@@ -59,7 +59,7 @@ module "asg" {
 
   iam_instance_profile_name = "ecsInstanceRole"
 
-  tags = merge(local.common_tags,{
+  tags = merge(local.common_tags, {
     key                 = "AmazonECSManaged"
     value               = true
     propagate_at_launch = true
