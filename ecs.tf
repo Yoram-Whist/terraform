@@ -36,7 +36,7 @@ module "ecs_service" {
   source  = "terraform-aws-modules/ecs/aws//modules/service"
   version = "5.12.0"
 
-  depends_on  = [module.db] # waiting for the db to initialize before creating tasks
+  # depends_on  = [module.db] # waiting for the db to initialize before creating tasks
   name        = var.ecs_service_name
   cluster_arn = module.ecs_cluster.arn
   launch_type = var.launch_type
@@ -88,9 +88,24 @@ module "ecs_service" {
     }
   }
 
-
-  subnet_ids         = module.vpc.private_subnets
-  security_group_ids = [aws_security_group.ecs_sg.id]
-
-  tags = local.common_tags
+  subnet_ids          = module.vpc.private_subnets
+  security_group_name = var.ecs_sg_name
+  tags                = local.common_tags
+  security_group_rules = {
+    alb_ingress_3000 = {
+      type                     = "ingress"
+      from_port                = var.http_port
+      to_port                  = var.http_port
+      protocol                 = var.tcp_proctocol
+      description              = "Service SG"
+      source_security_group_id = module.alb.security_group_id
+    }
+    egress_all = {
+      type        = "egress"
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_blocks = var.all_cidr_block
+    }
+  }
 }

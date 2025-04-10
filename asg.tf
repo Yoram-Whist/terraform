@@ -12,9 +12,8 @@ module "asg" {
   vpc_zone_identifier       = module.vpc.private_subnets
 
   # Launch template
-  launch_template_name        = var.launch_template_name
-  launch_template_description = "TF Launch template"
-  update_default_version      = true
+  launch_template_name   = var.launch_template_name
+  update_default_version = true
 
   image_id          = var.image_id
   instance_type     = var.instance_type
@@ -39,8 +38,17 @@ module "asg" {
       delete_on_termination     = true
       description               = "eth0"
       device_index              = 0
-      security_groups           = [aws_security_group.ecs_sg.id]
+      security_groups           = [module.ecs_service.security_group_id]
       sociate_public_ip_address = false # Disable auto-assign public IP
+    }
+  ]
+
+  initial_lifecycle_hooks = [
+    {
+      name                 = var.asg_lifecycle_name
+      default_result       = var.lifecycle_default_result
+      heartbeat_timeout    = var.lifecycle_heartbeat_timeout                               
+      lifecycle_transition = var.lifecycle_transition
     }
   ]
 
@@ -68,9 +76,9 @@ resource "aws_cloudwatch_metric_alarm" "scale_up" {
   comparison_operator = "GreaterThanThreshold"
   namespace           = "AWS/EC2"
   metric_name         = "CPUUtilization"
-  threshold           = 60
-  evaluation_periods  = 1
-  period              = 300 # 5 minutes period
+  threshold           = var.scale_up_treshold
+  evaluation_periods  = var.evaluation_periods
+  period              = var.scale_in_out_timeout # 5 minutes period
   statistic           = "Average"
 
   dimensions = {
@@ -86,9 +94,9 @@ resource "aws_cloudwatch_metric_alarm" "scale_down" {
   comparison_operator = "LessThanOrEqualToThreshold"
   namespace           = "AWS/EC2"
   metric_name         = "CPUUtilization"
-  threshold           = 40
-  evaluation_periods  = 1
-  period              = 300 # 5 minutes period
+  threshold           = var.scale_down_treshold
+  evaluation_periods  = var.evaluation_periods
+  period              = var.scale_in_out_timeout # 5 minutes period
   statistic           = "Average"
 
   dimensions = {
@@ -101,8 +109,8 @@ resource "aws_autoscaling_policy" "scale_up" {
   name                   = "ecs_scale_up"
   autoscaling_group_name = module.asg.autoscaling_group_name
   adjustment_type        = "ChangeInCapacity"
-  scaling_adjustment     = 1
-  cooldown               = 120
+  scaling_adjustment     = var.increase_instances_amount
+  cooldown               = var.cooldown
 }
 
 # Autoscaling policy to remove one instance if CPU utilization is low
@@ -110,6 +118,6 @@ resource "aws_autoscaling_policy" "scale_down" {
   name                   = "ecs_scale_down"
   autoscaling_group_name = module.asg.autoscaling_group_name
   adjustment_type        = "ChangeInCapacity"
-  scaling_adjustment     = -1
-  cooldown               = 120
+  scaling_adjustment     = var.decrease_instances_amount
+  cooldown               = var.cooldown
 }

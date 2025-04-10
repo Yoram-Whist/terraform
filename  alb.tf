@@ -5,13 +5,16 @@ module "alb" {
   name               = var.alb_name
   load_balancer_type = var.load_balancer_type
 
-  vpc_id          = module.vpc.vpc_id
-  subnets         = module.vpc.public_subnets
-  security_groups = [aws_security_group.alb_sg.id]
+  vpc_id  = module.vpc.vpc_id
+  subnets = module.vpc.public_subnets
+
+  # security_groups       = [aws_security_group.alb_sg.id]
 
   enable_deletion_protection = false
 
   # Security Group
+  security_group_name = var.alb_sg_name
+  security_group_tags = local.common_tags
   security_group_ingress_rules = {
     all_http = {
       from_port   = var.http_port

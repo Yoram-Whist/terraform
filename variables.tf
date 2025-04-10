@@ -118,6 +118,12 @@ variable "rds_engine" {
   default     = "mysql"
 }
 
+variable "rds_db_name" {
+  description = "name of the db created inside the rds"
+  type        = string
+  default     = "app_db"
+}
+
 variable "rds_engine_version" {
   description = "mysql enging version"
   type        = string
@@ -146,6 +152,18 @@ variable "storage_type" {
   description = "ssd storage for the ALL instances"
   type        = string
   default     = "gp3"
+}
+
+variable "deletion_protection" {
+  description = "allows to delete the rds with terraform destroy"
+  type        = bool
+  default     = false
+}
+
+variable "skip_final_snapshot" {
+  description = "not creating a snapshop before deleting"
+  type        = bool
+  default     = true
 }
 
 ### ALB
@@ -226,6 +244,66 @@ variable "instance_storage" {
   description = "amount of storage allocated to the instace"
   type        = number
   default     = 30
+}
+
+variable "asg_lifecycle_name" {
+  description = "lifecycle hook name"
+  type        = string
+  default     = "ecs-managed-draining-termination-hook"
+}
+
+variable "lifecycle_default_result" {
+  description = "The action the Auto Scaling group takes when the lifecycle hook timeout elapses or if an unexpected failure occurs."
+  type        = string
+  default     = "CONTINUE"
+}
+
+variable "lifecycle_heartbeat_timeout" {
+  description = "The amount of time, in seconds, for the instances to remain in wait state."
+  type        = number
+  default     = 180
+}
+
+variable "lifecycle_transition" {
+  description = "You can perform custom actions as EC2 Auto Scaling launches or terminates instances."
+  type        = string
+  default     = "autoscaling:EC2_INSTANCE_TERMINATING"
+}
+
+variable "scale_up_treshold" {
+  description = "cpu avg usage before scaling up"
+  type        = number
+  default     = 60
+}
+
+variable "scale_down_treshold" {
+  description = "cpu avg usage before scaling down"
+  type        = number
+  default     = 40
+}
+
+variable "evaluation_periods" {
+  description = "how many times to occur before scaling up or down"
+  type        = number
+  default     = 1
+}
+
+variable "increase_instances_amount" {
+  description = "how many instances to create when scaling up"
+  type        = number
+  default     = 1
+}
+
+variable "decrease_instances_amount" {
+  description = "how many instances to terminate when scaling down"
+  type        = number
+  default     = -1
+}
+
+variable "cooldown" {
+  description = "how long to wait before each scale"
+  type        = number
+  default     = 120
 }
 
 ### ECS

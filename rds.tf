@@ -11,7 +11,7 @@ module "db" {
 
   identifier = local.db_creds.database
 
-  db_name                     = "app_db"
+  db_name                     = var.rds_db_name
   port                        = var.mysql_port
   manage_master_user_password = false
   username                    = local.db_creds.username
@@ -28,9 +28,9 @@ module "db" {
   # DB option group
   major_engine_version = var.rds_engine_version
 
-  # Database Deletion Protection - for production use enable both
-  deletion_protection = false
-  skip_final_snapshot = true
+  # Database Deletion Protection - for production enable both
+  deletion_protection = var.deletion_protection
+  skip_final_snapshot = var.skip_final_snapshot
 
   tags = local.common_tags
 }
