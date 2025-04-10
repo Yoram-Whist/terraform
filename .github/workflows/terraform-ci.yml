@@ -38,7 +38,7 @@ jobs:
 
     - name: Terraform Plan
       id: plan
-      run: terraform plan -input=false -no-color -var-file="environments/production.tfvars" -out=tfplan && terraform show -no-color tfplan
+      run: terraform plan -input=false -no-color -var-file="./environments/production.tfvars" -out=tfplan && terraform show -no-color tfplan
 
     - name: Add Plan Comment
       if: steps.plan.outcome == 'success'
