@@ -47,7 +47,7 @@ module "asg" {
     {
       name                 = var.asg_lifecycle_name
       default_result       = var.lifecycle_default_result
-      heartbeat_timeout    = var.lifecycle_heartbeat_timeout                               
+      heartbeat_timeout    = var.lifecycle_heartbeat_timeout
       lifecycle_transition = var.lifecycle_transition
     }
   ]
@@ -59,11 +59,11 @@ module "asg" {
 
   iam_instance_profile_name = "ecsInstanceRole"
 
-  tags = {
+  tags = merge(local.common_tags,{
     key                 = "AmazonECSManaged"
     value               = true
     propagate_at_launch = true
-  }
+  })
 
 }
 

@@ -1,11 +1,11 @@
 data "aws_secretsmanager_secret_version" "creds" {
-  secret_id = "rds-cred-tf"
+  secret_id = var.rds_creds_secrets
 }
 
 locals {
   common_tags = {
-    creator     = "Yoram"
-    Environment = "production"
+    creator     = var.creator
+    Environment = "${terraform.workspace}"
   }
 
   db_creds = jsondecode(

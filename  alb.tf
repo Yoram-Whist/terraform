@@ -17,7 +17,7 @@ module "alb" {
     all_http = {
       from_port   = var.http_port
       to_port     = var.http_port
-      ip_protocol = var.tcp_proctocol
+      ip_protocol = var.tcp_protocol
       cidr_ipv4   = var.alb_cidr
     }
   }
@@ -42,7 +42,7 @@ module "alb" {
   target_groups = {
     "${var.alb_tg_name}" = {
       backend_protocol                  = var.http_protocol
-      backend_port                      = var.tcp_proctocol
+      backend_port                      = var.tcp_protocol
       target_type                       = "ip"
       deregistration_delay              = 5
       load_balancing_cross_zone_enabled = true

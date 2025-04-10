@@ -55,7 +55,7 @@ module "ecs_service" {
         {
           name          = var.task_name
           containerPort = var.http_port
-          protocol      = var.tcp_proctocol
+          protocol      = var.tcp_protocol
           appProtocol   = var.http_protocol
         }
       ]
@@ -96,7 +96,7 @@ module "ecs_service" {
       type                     = "ingress"
       from_port                = var.http_port
       to_port                  = var.http_port
-      protocol                 = var.tcp_proctocol
+      protocol                 = var.tcp_protocol
       description              = "Service SG"
       source_security_group_id = module.alb.security_group_id
     }

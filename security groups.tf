@@ -7,7 +7,7 @@ resource "aws_security_group" "rds_sg" {
   ingress {
     from_port       = var.mysql_port
     to_port         = var.mysql_port
-    protocol        = var.tcp_proctocol
+    protocol        = var.tcp_protocol
     security_groups = [module.ecs_service.security_group_id] # Allows traffic only from ECS instances
   }
 
