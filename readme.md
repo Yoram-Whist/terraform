@@ -1,7 +1,7 @@
 # What this project does? 
 This project creates ECS while using Auto Scaling,
 ALB connects to ECS instances, instances connects to the RDS,
-The RDS is created with using creds from AWS secrets manager,
+The RDS is created with using creds from AWS secrets manager, 
 The services are scaleable as well as the EC2s.
 Implements the best practices for aws terraform.
 

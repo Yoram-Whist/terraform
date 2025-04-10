@@ -4,7 +4,6 @@ variable "creator" {
   type        = string
 }
 
-
 ### VPC
 variable "aws_region" {
   description = "Region to use for AWS resources"
