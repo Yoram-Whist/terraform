@@ -4,8 +4,6 @@ on:
   pull_request:
     branches:
       - main
-    paths:
-      - infrastructre/**
   workflow_dispatch:
   
 jobs:
@@ -16,7 +14,6 @@ jobs:
     defaults:
       run:
         shell: bash
-        working-directory: ./infrastructure
         
     steps:
     - name: Checkout Repo
