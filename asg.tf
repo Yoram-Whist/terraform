@@ -78,7 +78,7 @@ resource "aws_cloudwatch_metric_alarm" "scale_up" {
   metric_name         = "CPUUtilization"
   threshold           = var.scale_up_treshold
   evaluation_periods  = var.evaluation_periods
-  period              = var.scale_in_out_timeout # 5 minutes period
+  period              = var.scale_in_out_timeout
   statistic           = "Average"
 
   dimensions = {
@@ -96,7 +96,7 @@ resource "aws_cloudwatch_metric_alarm" "scale_down" {
   metric_name         = "CPUUtilization"
   threshold           = var.scale_down_treshold
   evaluation_periods  = var.evaluation_periods
-  period              = var.scale_in_out_timeout # 5 minutes period
+  period              = var.scale_in_out_timeout
   statistic           = "Average"
 
   dimensions = {
