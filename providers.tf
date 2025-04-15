@@ -7,6 +7,13 @@ terraform {
       version = "~> 5.0"
     }
   }
+
+  backend "s3" {
+    bucket = "yoram-tf-backend"
+    key    = "terraform.tfstate"
+    region = "us-west-1"
+    use_lockfile = true
+  }
 }
 
 provider "aws" {

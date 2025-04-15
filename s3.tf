@@ -1,9 +1,8 @@
 module "s3_bucket_for_logs" {
   source  = "terraform-aws-modules/s3-bucket/aws"
   version = "4.6.0"
-
-  bucket = var.alb_bucket_name
-  acl    = "log-delivery-write"
+  bucket  = var.alb_bucket_name
+  acl     = "log-delivery-write"
 
   # Allow deletion of non-empty bucket
   force_destroy = true
