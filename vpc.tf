@@ -5,8 +5,8 @@ module "vpc" {
   name            = "${terraform.workspace}-${var.vpc_name}"
   cidr            = var.vpc_cidr_block
   azs             = var.availability_zones
-  private_subnets = var.public_subnet_cidrs
-  public_subnets  = var.private_subnet_cidrs
+  private_subnets = var.private_subnet_cidrs
+  public_subnets  = var.public_subnet_cidrs
 
   enable_vpn_gateway     = var.enable_vpn_gateway
   enable_nat_gateway     = var.enable_nat_gateway
